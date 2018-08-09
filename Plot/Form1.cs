@@ -19,15 +19,18 @@ namespace Plot
 
         System.IO.StreamWriter out_file;
         System.IO.StreamReader in_file;
-
-
+        public delegate void AddDataDelegate(String myString);
+        public AddDataDelegate myDelegate;
+        String receiveData;
+        int licznik = 0;
+        bool send_data_flag = false;
         public SignalView()
         {
             InitializeComponent();
-            konfiguracja();
+            configuration();
         }
         
-        public void konfiguracja()
+        public void configuration()
         {
             String[] ports = SerialPort.GetPortNames();
             nameportCombobox.Items.AddRange(ports);
@@ -89,6 +92,67 @@ namespace Plot
                     statusBox.Text = "Błąd z połączeniem";
                     return;
                 }
+            }
+        }
+        //wypisywanie dane wyjściowe w textbox
+        public void AddDataMethod(String myString)
+        {
+            receiveTextBox.AppendText(myString);
+        }
+
+
+
+        public void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort sp = (SerialPort)sender;
+            string indata = sp.ReadLine();
+            //string indata = sp.ReadExisting();
+            receiveData += indata + Environment.NewLine;
+
+           
+
+
+
+            receiveTextBox.BeginInvoke(this.myDelegate, new Object[] { indata });
+
+
+            if (mySerial.IsOpen)
+            {
+                
+            }
+        }
+
+        /* Append text to rx_textarea*/
+        private void update_rxtextarea_event(object sender, DoWorkEventArgs e)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+                if (receiveTextBox.Lines.Count() > 5000)
+                    receiveTextBox.ResetText();
+                receiveTextBox.AppendText("[RX]> " + data);
+            }));
+        }
+
+
+        //zamykanie portu
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            if (mySerial.IsOpen)
+                mySerial.Close();
+        }
+        //tworzenie obiektu wykres
+        private void wykresButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.myDelegate = new AddDataDelegate(AddDataMethod);
+                mySerial.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            }
+            catch (Exception)
+            {   
+                //poprawka
+                statusBox.Text = "Time Exception";
+                throw;
             }
         }
     }
