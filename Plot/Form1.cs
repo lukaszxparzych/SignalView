@@ -33,16 +33,11 @@ namespace Plot
         public void configuration()
         {
             String[] ports = SerialPort.GetPortNames();
+            mySerial.DataReceived += DataReceivedHandler;
             nameportCombobox.Items.AddRange(ports);
-            backgroundWorker1.DoWork += new DoWorkEventHandler(DataReceivedHandler);
-
+            backgroundWorker1.DoWork += new DoWorkEventHandler(update_receiveTextBox_event);
 
         }
-
-
-
-
-
 
         private void plikToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -113,6 +108,17 @@ namespace Plot
             receiveTextBox.AppendText(myString);
         }
 
+        /* Append text to receiveTextBox*/
+        private void update_receiveTextBox_event(object sender, DoWorkEventArgs e)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+                if (receiveTextBox.Lines.Count() > 5000)
+                    receiveTextBox.ResetText();
+                receiveTextBox.AppendText("[RX]> " + data);
+            }));
+        }
+
 
 
         public void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
@@ -135,16 +141,22 @@ namespace Plot
                     int nbytes = mySerial.Read(dataReceived, 0, dataLength);
 
                     if (nbytes == 0) return;
-                  
+
                     //if()
 
                     this.BeginInvoke((Action)(() =>
                     {
                         data = System.Text.Encoding.Default.GetString(dataReceived);
 
-                        backgroundWorker
+                        if (!backgroundWorker1.IsBusy)
+                        {
 
-                    }
+                            //data = BitConverter.ToString(dataRecevied);
+
+                            backgroundWorker1.RunWorkerAsync();
+                        }
+
+                    }));  
                 }
                 catch (Exception)
                 {
@@ -155,18 +167,6 @@ namespace Plot
                 
         
         }
-
-        /* Append text to rx_textarea*/
-        private void update_rxtextarea_event(object sender, DoWorkEventArgs e)
-        {
-            this.BeginInvoke((Action)(() =>
-            {
-                if (receiveTextBox.Lines.Count() > 5000)
-                    receiveTextBox.ResetText();
-                receiveTextBox.AppendText("[RX]> " + data);
-            }));
-        }
-
 
         //zamykanie portu
         private void closeButton_Click(object sender, EventArgs e)
@@ -188,6 +188,11 @@ namespace Plot
                 statusBox.Text = "Time Exception";
                 throw;
             }
+        }
+
+        private void SignalView_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
