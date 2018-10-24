@@ -34,6 +34,8 @@ namespace Plot
         {
             String[] ports = SerialPort.GetPortNames();
             nameportCombobox.Items.AddRange(ports);
+            backgroundWorker1.DoWork += new DoWorkEventHandler(DataReceivedHandler);
+
 
         }
 
@@ -75,16 +77,13 @@ namespace Plot
                         mySerial.Open();
                         statusBox.Text = "OK";
 
-
-                        
-
+                                                
                         closeButton.Enabled = true;
                         wykresButton.Enabled = true;
 
                         tabControl1.Enabled = true;
 
                         
-
                     }
                 }
                 catch (UnauthorizedAccessException)
@@ -92,6 +91,20 @@ namespace Plot
                     statusBox.Text = "Błąd z połączeniem";
                     return;
                 }
+            }else if (mySerial.IsOpen)
+            {
+                try
+                {
+                    mySerial.Close();
+                    mySerial.DiscardInBuffer();
+                    mySerial.DiscardOutBuffer();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
             }
         }
         //wypisywanie dane wyjściowe w textbox
@@ -104,22 +117,43 @@ namespace Plot
 
         public void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
-            SerialPort sp = (SerialPort)sender;
+            /*
+             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadLine();
             //string indata = sp.ReadExisting();
             receiveData += indata + Environment.NewLine;
 
-           
-
-
-
             receiveTextBox.BeginInvoke(this.myDelegate, new Object[] { indata });
 
-
+            */
             if (mySerial.IsOpen)
             {
-                
+                try
+                {
+                    int dataLength = mySerial.BytesToRead;
+                    byte[] dataReceived = new byte[dataLength];
+                    int nbytes = mySerial.Read(dataReceived, 0, dataLength);
+
+                    if (nbytes == 0) return;
+                  
+                    //if()
+
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        data = System.Text.Encoding.Default.GetString(dataReceived);
+
+                        backgroundWorker
+
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
+                
+        
         }
 
         /* Append text to rx_textarea*/
