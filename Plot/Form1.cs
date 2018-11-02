@@ -24,6 +24,7 @@ namespace Plot
         String receiveData;
         int licznik = 0;
         bool send_data_flag = false;
+        bool plotter_flag = false;
         public SignalView()
         {
             InitializeComponent();
@@ -36,6 +37,9 @@ namespace Plot
             mySerial.DataReceived += DataReceivedHandler;
             nameportCombobox.Items.AddRange(ports);
             backgroundWorker1.DoWork += new DoWorkEventHandler(update_receiveTextBox_event);
+
+            for (int i = 0; i < 5 && i < 5; i++)
+                chart1.Series[i].Points.Add(0);
 
         }
 
@@ -72,9 +76,10 @@ namespace Plot
                         mySerial.Open();
                         statusBox.Text = "OK";
 
-                                                
+                                                  
                         closeButton.Enabled = true;
-                        wykresButton.Enabled = true;
+                        wykresButtonOpen.Enabled = true;
+                        wykresButtonClose.Enabled = true;
 
                         tabControl1.Enabled = true;
 
@@ -148,12 +153,27 @@ namespace Plot
                     {
                         data = System.Text.Encoding.Default.GetString(dataReceived);
 
-                        if (!backgroundWorker1.IsBusy)
+                        if (!plotter_flag && !backgroundWorker1.IsBusy)
                         {
-
-                            //data = BitConverter.ToString(dataRecevied);
+                            //if(opcjeToolStripMenuItem. == "HEX")
+                            //data = BitConverter.ToString(dataReceived);
 
                             backgroundWorker1.RunWorkerAsync();
+                        }
+                        else if (plotter_flag)
+                        {
+                            double number;
+                            string[] variables = data.Split('\n')[0].Split(',');
+                            for (int i = 0; i < variables.Length && i < 5; i++)
+                            {
+                                if (double.TryParse(variables[i], out number))
+                                {
+                                    if (chart1.Series[i].Points.Count > 500)
+                                        chart1.Series[i].Points.RemoveAt(0);
+                                    chart1.Series[i].Points.Add(number);
+                                }
+                            }
+                            chart1.ResetAutoValues();
                         }
 
                     }));  
@@ -179,8 +199,7 @@ namespace Plot
         {
             try
             {
-                this.myDelegate = new AddDataDelegate(AddDataMethod);
-                mySerial.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+                plotter_flag = true;
             }
             catch (Exception)
             {   
@@ -193,6 +212,39 @@ namespace Plot
         private void SignalView_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 2)
+                plotter_flag = true;
+            else
+                plotter_flag = false;
+        }
+
+        private void wykresButtonClose_Click(object sender, EventArgs e)
+        {
+            plotter_flag = false;
+        }
+
+        private void graphSpeed_ValueChanged(object sender, EventArgs e)
+        {
+            if (setGraphMaxEnable.Checked)
+                try
+                {
+                    graphMax.Value = (int)chart1.ChartAreas[0].AxisY.Maximum;
+                    chart1.ChartAreas[0].AxisY.Maximum = (int)graphMax.Value;
+                }
+                catch { throw; }
+            else
+                chart1.ChartAreas[0].AxisY.Maximum = Double.NaN;
+
+            graphMax.Enabled = setGraphMaxEnable.Checked;
+        }
+
+        private void graph_scale_ValueChanged(object sender, EventArgs e)
+        {
+            chart1.ChartAreas[0].AxisY.Interval = (int)graphSpeed.Value;
         }
     }
 }

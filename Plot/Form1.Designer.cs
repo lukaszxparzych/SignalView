@@ -29,6 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SignalView));
             this.mySerial = new System.IO.Ports.SerialPort(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -66,13 +73,30 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.receiveTextBox = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.wykresButton = new System.Windows.Forms.Button();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.wykresButtonOpen = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.wykresButtonClose = new System.Windows.Forms.Button();
+            this.plotterOption = new System.Windows.Forms.GroupBox();
+            this.graphMax = new System.Windows.Forms.NumericUpDown();
+            this.setGraphMinEnable = new System.Windows.Forms.CheckBox();
+            this.graphMin = new System.Windows.Forms.NumericUpDown();
+            this.setGraphMaxEnable = new System.Windows.Forms.CheckBox();
+            this.graph_scale = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.graphSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.configurationBox.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.plotterOption.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.graphMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graphMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graph_scale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graphSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -86,7 +110,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(394, 23);
+            this.menuStrip1.Size = new System.Drawing.Size(1219, 23);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -348,7 +372,7 @@
             // 
             this.openButton.Location = new System.Drawing.Point(282, 68);
             this.openButton.Name = "openButton";
-            this.openButton.Size = new System.Drawing.Size(100, 37);
+            this.openButton.Size = new System.Drawing.Size(100, 32);
             this.openButton.TabIndex = 7;
             this.openButton.Text = "Otwórz port";
             this.openButton.UseVisualStyleBackColor = true;
@@ -357,9 +381,9 @@
             // closeButton
             // 
             this.closeButton.Enabled = false;
-            this.closeButton.Location = new System.Drawing.Point(282, 179);
+            this.closeButton.Location = new System.Drawing.Point(282, 182);
             this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(97, 37);
+            this.closeButton.Size = new System.Drawing.Size(100, 32);
             this.closeButton.TabIndex = 9;
             this.closeButton.Text = "Zamknij port";
             this.closeButton.UseVisualStyleBackColor = true;
@@ -372,7 +396,7 @@
             this.tabPage2.Controls.Add(this.terminalTextBox);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(361, 469);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Wyślij";
@@ -409,7 +433,7 @@
             this.tabPage1.Controls.Add(this.receiveTextBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(361, 469);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Odczytaj";
@@ -434,28 +458,253 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(369, 495);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
-            // wykresButton
+            // chart1
             // 
-            this.wykresButton.Enabled = false;
-            this.wykresButton.Location = new System.Drawing.Point(282, 111);
-            this.wykresButton.Name = "wykresButton";
-            this.wykresButton.Size = new System.Drawing.Size(100, 59);
-            this.wykresButton.TabIndex = 10;
-            this.wykresButton.Text = "Wyświetl wykres";
-            this.wykresButton.UseVisualStyleBackColor = true;
-            this.wykresButton.Click += new System.EventHandler(this.wykresButton_Click);
+            this.chart1.BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            this.chart1.Cursor = System.Windows.Forms.Cursors.Cross;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(388, 27);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Legend = "Legend1";
+            series2.Name = "Series2";
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Legend = "Legend1";
+            series3.Name = "Series3";
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Legend = "Legend1";
+            series4.Name = "Series4";
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series5.Legend = "Legend1";
+            series5.Name = "Series5";
+            this.chart1.Series.Add(series1);
+            this.chart1.Series.Add(series2);
+            this.chart1.Series.Add(series3);
+            this.chart1.Series.Add(series4);
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(819, 620);
+            this.chart1.TabIndex = 0;
+            this.chart1.Text = "chart1";
+            // 
+            // wykresButtonOpen
+            // 
+            this.wykresButtonOpen.Enabled = false;
+            this.wykresButtonOpen.Location = new System.Drawing.Point(282, 106);
+            this.wykresButtonOpen.Name = "wykresButtonOpen";
+            this.wykresButtonOpen.Size = new System.Drawing.Size(100, 32);
+            this.wykresButtonOpen.TabIndex = 10;
+            this.wykresButtonOpen.Text = "Wyświetl wykres";
+            this.wykresButtonOpen.UseVisualStyleBackColor = true;
+            this.wykresButtonOpen.Click += new System.EventHandler(this.wykresButton_Click);
             // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerSupportsCancellation = true;
             // 
+            // wykresButtonClose
+            // 
+            this.wykresButtonClose.Enabled = false;
+            this.wykresButtonClose.Location = new System.Drawing.Point(282, 144);
+            this.wykresButtonClose.Name = "wykresButtonClose";
+            this.wykresButtonClose.Size = new System.Drawing.Size(100, 32);
+            this.wykresButtonClose.TabIndex = 11;
+            this.wykresButtonClose.Text = "Zatrzymaj wykres";
+            this.wykresButtonClose.UseVisualStyleBackColor = true;
+            this.wykresButtonClose.Click += new System.EventHandler(this.wykresButtonClose_Click);
+            // 
+            // plotterOption
+            // 
+            this.plotterOption.Controls.Add(this.graphMax);
+            this.plotterOption.Controls.Add(this.setGraphMinEnable);
+            this.plotterOption.Controls.Add(this.graphMin);
+            this.plotterOption.Controls.Add(this.setGraphMaxEnable);
+            this.plotterOption.Controls.Add(this.graph_scale);
+            this.plotterOption.Controls.Add(this.label3);
+            this.plotterOption.Controls.Add(this.graphSpeed);
+            this.plotterOption.Controls.Add(this.label7);
+            this.plotterOption.Location = new System.Drawing.Point(388, 653);
+            this.plotterOption.Name = "plotterOption";
+            this.plotterOption.Size = new System.Drawing.Size(819, 64);
+            this.plotterOption.TabIndex = 26;
+            this.plotterOption.TabStop = false;
+            this.plotterOption.Text = "Ustawienia wykresu";
+            // 
+            // graphMax
+            // 
+            this.graphMax.AutoSize = true;
+            this.graphMax.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.graphMax.Enabled = false;
+            this.graphMax.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.graphMax.Location = new System.Drawing.Point(137, 30);
+            this.graphMax.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.graphMax.Minimum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            -2147483648});
+            this.graphMax.Name = "graphMax";
+            this.graphMax.Size = new System.Drawing.Size(59, 20);
+            this.graphMax.TabIndex = 28;
+            this.graphMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.graphMax.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // setGraphMinEnable
+            // 
+            this.setGraphMinEnable.AutoSize = true;
+            this.setGraphMinEnable.Location = new System.Drawing.Point(202, 31);
+            this.setGraphMinEnable.Name = "setGraphMinEnable";
+            this.setGraphMinEnable.Size = new System.Drawing.Size(103, 17);
+            this.setGraphMinEnable.TabIndex = 27;
+            this.setGraphMinEnable.Text = "Ustaw Minimum:";
+            this.setGraphMinEnable.UseVisualStyleBackColor = true;
+            // 
+            // graphMin
+            // 
+            this.graphMin.AutoSize = true;
+            this.graphMin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.graphMin.Enabled = false;
+            this.graphMin.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.graphMin.Location = new System.Drawing.Point(311, 30);
+            this.graphMin.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.graphMin.Minimum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            -2147483648});
+            this.graphMin.Name = "graphMin";
+            this.graphMin.Size = new System.Drawing.Size(59, 20);
+            this.graphMin.TabIndex = 26;
+            this.graphMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.graphMin.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // setGraphMaxEnable
+            // 
+            this.setGraphMaxEnable.AutoSize = true;
+            this.setGraphMaxEnable.Location = new System.Drawing.Point(19, 31);
+            this.setGraphMaxEnable.Name = "setGraphMaxEnable";
+            this.setGraphMaxEnable.Size = new System.Drawing.Size(112, 17);
+            this.setGraphMaxEnable.TabIndex = 25;
+            this.setGraphMaxEnable.Text = "Ustaw Maksimum:";
+            this.setGraphMaxEnable.UseVisualStyleBackColor = true;
+            // 
+            // graph_scale
+            // 
+            this.graph_scale.AutoSize = true;
+            this.graph_scale.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.graph_scale.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.graph_scale.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.graph_scale.Location = new System.Drawing.Point(432, 30);
+            this.graph_scale.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.graph_scale.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.graph_scale.Name = "graph_scale";
+            this.graph_scale.Size = new System.Drawing.Size(53, 20);
+            this.graph_scale.TabIndex = 19;
+            this.graph_scale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.graph_scale.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.graph_scale.ValueChanged += new System.EventHandler(this.graph_scale_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(376, 30);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(50, 16);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Punkty:";
+            // 
+            // graphSpeed
+            // 
+            this.graphSpeed.AllowDrop = true;
+            this.graphSpeed.AutoSize = true;
+            this.graphSpeed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.graphSpeed.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.graphSpeed.Location = new System.Drawing.Point(562, 30);
+            this.graphSpeed.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.graphSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.graphSpeed.Name = "graphSpeed";
+            this.graphSpeed.Size = new System.Drawing.Size(53, 20);
+            this.graphSpeed.TabIndex = 17;
+            this.graphSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.graphSpeed.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.graphSpeed.ValueChanged += new System.EventHandler(this.graphSpeed_ValueChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(491, 30);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(65, 16);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Przedział:";
+            // 
             // SignalView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(394, 729);
-            this.Controls.Add(this.wykresButton);
+            this.ClientSize = new System.Drawing.Size(1219, 729);
+            this.Controls.Add(this.plotterOption);
+            this.Controls.Add(this.wykresButtonClose);
+            this.Controls.Add(this.chart1);
+            this.Controls.Add(this.wykresButtonOpen);
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.openButton);
             this.Controls.Add(this.statusBox);
@@ -479,6 +728,13 @@
             this.tabPage2.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            this.plotterOption.ResumeLayout(false);
+            this.plotterOption.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.graphMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graphMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graph_scale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graphSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -519,10 +775,21 @@
         private System.Windows.Forms.RichTextBox receiveTextBox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.RichTextBox terminalTextBox;
-        private System.Windows.Forms.Button wykresButton;
+        private System.Windows.Forms.Button wykresButtonOpen;
         private System.Windows.Forms.Button sendData;
         private System.Windows.Forms.TextBox tx_textarea;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button wykresButtonClose;
+        private System.Windows.Forms.GroupBox plotterOption;
+        private System.Windows.Forms.NumericUpDown graphMax;
+        private System.Windows.Forms.CheckBox setGraphMinEnable;
+        private System.Windows.Forms.NumericUpDown graphMin;
+        private System.Windows.Forms.CheckBox setGraphMaxEnable;
+        private System.Windows.Forms.NumericUpDown graph_scale;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown graphSpeed;
+        private System.Windows.Forms.Label label7;
     }
 }
 
