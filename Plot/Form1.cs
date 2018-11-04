@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+Praca inżynierska
+Łukasz Parzych 
+*/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,10 +28,8 @@ namespace Plot
         System.IO.StreamReader in_file;
         public delegate void AddDataDelegate(String myString);
         public AddDataDelegate myDelegate;
-        String receiveData;
         int licznik = 0;
         int graph_scaler = 500;
-        bool send_data_flag = false;
         bool plotterBool = false;
         public SignalView()
         {
@@ -42,6 +44,16 @@ namespace Plot
             mySerial.DataReceived += DataReceivedHandler;
             nameportCombobox.Items.AddRange(ports);
             backgroundWorker1.DoWork += new DoWorkEventHandler(update_receiveTextBox_event);
+
+            dopisaćToolStripMenuItem.Enabled = true;
+            nadpiszToolStripMenuItem.Enabled = true;
+            wyczyśćToolStripMenuItem.Enabled = true;
+
+
+            bitdanychCombobox.SelectedIndex = 0;
+            bitstopuCombobox.SelectedIndex = 0;
+            bitparzystosciCombobox.SelectedIndex = 0;
+            flowcontrolCombobox.SelectedIndex = 0;
 
             for (int i = 0; i < 5 && i < 5; i++)
                 chart1.Series[i].Points.Add(0);
@@ -102,31 +114,46 @@ namespace Plot
                         mySerial.BaudRate = Convert.ToInt32(predkoscCombobox.Text);                        
                         mySerial.Open();
                         statusBox.Text = "OK";
-
+                        alert("Otworzono port");
+                        tx_textarea.Enabled = true;
                                                   
                         closeButton.Enabled = true;
                         wykresButtonOpen.Enabled = true;
 
+                        dopisaćToolStripMenuItem.Enabled = false;
+                        nadpiszToolStripMenuItem.Enabled = false;
+                        wyczyśćToolStripMenuItem.Enabled = false;
+
                         tabControl1.Enabled = true;
+
+                        nameportCombobox.Enabled = false;
+                        predkoscCombobox.Enabled = false;
+                        bitdanychCombobox.Enabled = false;
+                        bitstopuCombobox.Enabled = false;
+                        bitparzystosciCombobox.Enabled = false;
+                        flowcontrolCombobox.Enabled = false;
 
                         setGraphMaxEnable.Enabled = true;
                         setGraphMinEnable.Enabled = true;
                         graphScale.ReadOnly = false;
                         graphSpeed.ReadOnly = false;
+                        screenChart.Enabled = true;
 
+                        /*
                         mySerial.BaudRate = (Int32.Parse(predkoscCombobox.Text));
                         mySerial.StopBits = (StopBits)Enum.Parse(typeof(StopBits), (bitstopuCombobox.SelectedIndex + 1).ToString(), true);
                         mySerial.Parity = (Parity)Enum.Parse(typeof(Parity), bitparzystosciCombobox.SelectedIndex.ToString(), true);
                         mySerial.DataBits = (Int32.Parse(bitdanychCombobox.Text));
                         mySerial.Handshake = (Handshake)Enum.Parse(typeof(Handshake), flowcontrolCombobox.SelectedIndex.ToString(), true);
-
-
+                        */
+                       
 
                     }
                 }
                 catch (UnauthorizedAccessException)
                 {
                     statusBox.Text = "Błąd z połączeniem";
+                    alert("Błąd z połączeniem");
                     return;
                 }
             }else if (mySerial.IsOpen)
@@ -254,14 +281,50 @@ namespace Plot
         //zamykanie portu
         private void closeButton_Click(object sender, EventArgs e)
         {
-            if (mySerial.IsOpen)
+            if (mySerial.IsOpen) { 
                 mySerial.Close();
+
+                dopisaćToolStripMenuItem.Enabled = true;
+                nadpiszToolStripMenuItem.Enabled = true;
+                wyczyśćToolStripMenuItem.Enabled = true;
+
+                closeButton.Enabled = false;
+                wykresButtonOpen.Enabled = false;
+                screenChart.Enabled = false;
+
+                tabControl1.Enabled = false;
+
+                setGraphMaxEnable.Enabled = false;
+                setGraphMinEnable.Enabled = false;
+                graphScale.ReadOnly = true;
+                graphSpeed.ReadOnly = true;
+
+                nameportCombobox.Enabled = true;
+                predkoscCombobox.Enabled = true;
+                bitdanychCombobox.Enabled = true;
+                bitstopuCombobox.Enabled = true;
+                bitparzystosciCombobox.Enabled = true;
+                flowcontrolCombobox.Enabled = true;
+
+                foreach (var series in chart1.Series)
+                {
+                    series.Points.Clear();
+                }
+                tx_textarea.Clear();
+                receiveTextBox.Clear();
+                terminalTextBox.Clear();
+
+                statusBox.Text = "Zamknięto port";
+                alert("Zamknięto port");
+
+            }
         }
         //tworzenie obiektu wykres
         private void wykresButton_Click(object sender, EventArgs e)
         {
             try
             {
+                wykresButtonOpen.Enabled = false;
                 setGraphMaxEnable.Enabled = true;
                 setGraphMinEnable.Enabled = true;
                 graphScale.ReadOnly = false;
@@ -296,6 +359,7 @@ namespace Plot
         {
             plotterBool = false;
             wykresButtonClose.Enabled = false;
+            wykresButtonOpen.Enabled = true;
             setGraphMaxEnable.Enabled = false;
             setGraphMinEnable.Enabled = false;
             graphScale.ReadOnly = true;
@@ -366,7 +430,7 @@ namespace Plot
         {
             message.Icon = Icon;
             message.Visible = true;
-            message.ShowBalloonTip(5000, "Praca Inżynierska", text, ToolTipIcon.Info);
+            message.ShowBalloonTip(3000, "Praca Inżynierska", text, ToolTipIcon.Info);
         }
 
         private void information(string text)
@@ -385,20 +449,44 @@ namespace Plot
         }
 
         private void dopisaćToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            nadpiszToolStripMenuItem.Checked = false;
+        {         
+                nadpiszToolStripMenuItem.Checked = false;
+            if (dopisaćToolStripMenuItem.Checked)
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+
+                }
+                else
+                {
+                    dopisaćToolStripMenuItem.Checked = false;
+                }
+            }
         }
 
         private void nadpiszToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dopisaćToolStripMenuItem.Checked = false;
+
+            if (nadpiszToolStripMenuItem.Checked)
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+
+                }
+                else
+                {
+                    nadpiszToolStripMenuItem.Checked = false;
+                }
+            }
         }
 
         private void wyczyśćToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dopisaćToolStripMenuItem.Checked == true || nadpiszToolStripMenuItem.Checked == true) { 
-            dopisaćToolStripMenuItem.Checked = false;
-            nadpiszToolStripMenuItem.Checked = false;
+            if (dopisaćToolStripMenuItem.Checked == true || nadpiszToolStripMenuItem.Checked == true)
+            { 
+                dopisaćToolStripMenuItem.Checked = false;
+                nadpiszToolStripMenuItem.Checked = false;
             }
         }
 
@@ -409,11 +497,32 @@ namespace Plot
 
         private void sendData_Click(object sender, EventArgs e)
         {
-            terminalTextBox.Clear();
+
+            if(tx_textarea.Text.Length != 0)
+            {
+                try
+                {
+                    String data;
+                    data = tx_textarea.Text;
+                    mySerial.WriteLine(data);
+                    tx_textarea.Text = "";
+                 
+                    terminalTextBox.AppendText("[TX]> " + data + "\n");
+                }
+                catch
+                {
+                    alert("Nie można wysłać do " + mySerial.PortName + ", port może być używany w innym programie!");
+                }
+            }
+            else
+            {
+                alert("Wpisz dane");
+            }
+            //terminalTextBox.Clear();
 
             }
 
-        //get number of lines
+       
         private int file_size(string path)
         {
             var file = new StreamReader(path).ReadToEnd();
@@ -434,23 +543,11 @@ namespace Plot
 
         private void screenChart_Click(object sender, EventArgs e)
         {
-            chart1.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                chart1.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
         }
 
-        /*
-        // save graph as image
-        private void saveAsImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                graph.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
-        }
-        //clear graph
-        private void clear_graph_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 5; i++)
-                graph.Series[i].Points.Clear();
-        }
-        */
+       
 
     }
 }
