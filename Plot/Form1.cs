@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
 using System.Timers;
+using System.Windows.Forms.DataVisualization.Charting;
+
+
 
 namespace Plot
 {
@@ -23,8 +26,9 @@ namespace Plot
         public AddDataDelegate myDelegate;
         String receiveData;
         int licznik = 0;
+        int graph_scaler = 500;
         bool send_data_flag = false;
-        bool plotter_flag = false;
+        bool plotterBool = false;
         public SignalView()
         {
             InitializeComponent();
@@ -33,6 +37,7 @@ namespace Plot
         
         public void configuration()
         {
+            alert("Witam!");
             String[] ports = SerialPort.GetPortNames();
             mySerial.DataReceived += DataReceivedHandler;
             nameportCombobox.Items.AddRange(ports);
@@ -62,28 +67,61 @@ namespace Plot
                     if (nameportCombobox.Text == "")
                     {
                         statusBox.Text = "Wybierz port";
+                        alert("Wybierz port");
                     }
                     else if (predkoscCombobox.Text == "")
                     {
                         statusBox.Text = "Wybierz szybkość";
+                        alert("Wybierz szybkość");
+                    }
+                    else if (bitdanychCombobox.Text == "")
+                    {
+                        statusBox.Text = "Wybierz bit danych";
+                        alert("Wybierz bit danych");
+                    }
+                    else if (bitstopuCombobox.Text == "")
+                    {
+                        statusBox.Text = "Wybierz bit stopu";
+                        alert("Wybierz bit stopu");
+                    }
+                    else if (bitparzystosciCombobox.Text == "")
+                    {
+                        statusBox.Text = "Wybierz bit parzystości";
+                        alert("Wybierz bit parzystości");
+                    }
+                    else if (flowcontrolCombobox.Text == "")
+                    {
+                        statusBox.Text = "Wybierz flow control";
+                        alert("Wybierz flow control");
                     }
                     else
                     {
 
 
                         mySerial.PortName = nameportCombobox.Text;
-                        mySerial.BaudRate = Convert.ToInt32(predkoscCombobox.Text);
+                        mySerial.BaudRate = Convert.ToInt32(predkoscCombobox.Text);                        
                         mySerial.Open();
                         statusBox.Text = "OK";
 
                                                   
                         closeButton.Enabled = true;
                         wykresButtonOpen.Enabled = true;
-                        wykresButtonClose.Enabled = true;
 
                         tabControl1.Enabled = true;
 
-                        
+                        setGraphMaxEnable.Enabled = true;
+                        setGraphMinEnable.Enabled = true;
+                        graphScale.ReadOnly = false;
+                        graphSpeed.ReadOnly = false;
+
+                        mySerial.BaudRate = (Int32.Parse(predkoscCombobox.Text));
+                        mySerial.StopBits = (StopBits)Enum.Parse(typeof(StopBits), (bitstopuCombobox.SelectedIndex + 1).ToString(), true);
+                        mySerial.Parity = (Parity)Enum.Parse(typeof(Parity), bitparzystosciCombobox.SelectedIndex.ToString(), true);
+                        mySerial.DataBits = (Int32.Parse(bitdanychCombobox.Text));
+                        mySerial.Handshake = (Handshake)Enum.Parse(typeof(Handshake), flowcontrolCombobox.SelectedIndex.ToString(), true);
+
+
+
                     }
                 }
                 catch (UnauthorizedAccessException)
@@ -107,6 +145,31 @@ namespace Plot
 
             }
         }
+
+        private void send_data(object sender, EventArgs e)
+        {
+
+            string tx_data = "";
+
+            
+                if (mySerial.IsOpen)
+                {
+                    try
+                    {
+
+                        mySerial.Write(tx_data.Replace("\\n", Environment.NewLine));
+                        terminalTextBox.AppendText("[TX]> " + tx_data + "\n");
+                    }
+                    catch
+                    {
+                        alert("Nie można wysłać do " + mySerial.PortName + " port może być używany w innym programie!");
+                    }
+                }
+            
+          
+        }
+
+
         //wypisywanie dane wyjściowe w textbox
         public void AddDataMethod(String myString)
         {
@@ -153,14 +216,14 @@ namespace Plot
                     {
                         data = System.Text.Encoding.Default.GetString(dataReceived);
 
-                        if (!plotter_flag && !backgroundWorker1.IsBusy)
+                        if (!plotterBool && !backgroundWorker1.IsBusy)
                         {
                             //if(opcjeToolStripMenuItem. == "HEX")
                             //data = BitConverter.ToString(dataReceived);
 
                             backgroundWorker1.RunWorkerAsync();
                         }
-                        else if (plotter_flag)
+                        else if (plotterBool)
                         {
                             double number;
                             string[] variables = data.Split('\n')[0].Split(',');
@@ -168,7 +231,7 @@ namespace Plot
                             {
                                 if (double.TryParse(variables[i], out number))
                                 {
-                                    if (chart1.Series[i].Points.Count > 500)
+                                    if (chart1.Series[i].Points.Count > graph_scaler)
                                         chart1.Series[i].Points.RemoveAt(0);
                                     chart1.Series[i].Points.Add(number);
                                 }
@@ -199,7 +262,14 @@ namespace Plot
         {
             try
             {
-                plotter_flag = true;
+                setGraphMaxEnable.Enabled = true;
+                setGraphMinEnable.Enabled = true;
+                graphScale.ReadOnly = false;
+                graphSpeed.ReadOnly = false;
+
+                wykresButtonClose.Enabled = true;
+                plotterBool = true;
+
             }
             catch (Exception)
             {   
@@ -217,18 +287,45 @@ namespace Plot
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
             if (tabControl1.SelectedIndex == 2)
-                plotter_flag = true;
+                plotterBool = true;
             else
-                plotter_flag = false;
+                plotterBool = false;
         }
 
         private void wykresButtonClose_Click(object sender, EventArgs e)
         {
-            plotter_flag = false;
+            plotterBool = false;
+            wykresButtonClose.Enabled = false;
+            setGraphMaxEnable.Enabled = false;
+            setGraphMinEnable.Enabled = false;
+            graphScale.ReadOnly = true;
+            graphSpeed.ReadOnly = true;
         }
 
         private void graphSpeed_ValueChanged(object sender, EventArgs e)
         {
+
+            chart1.ChartAreas[0].AxisY.Interval = (int)graphSpeed.Value;
+
+
+        }
+
+        private void graph_scale_ValueChanged(object sender, EventArgs e)
+        {
+            graph_scaler = (int)graphScale.Value;
+            for (int i = 0; i < 5; i++)
+                chart1.Series[i].Points.Clear();
+        }
+
+        private void SignalView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (mySerial.IsOpen)
+                mySerial.Close();
+        }
+
+        private void setGraphMaxEnable_CheckedChanged(object sender, EventArgs e)
+        {
+
             if (setGraphMaxEnable.Checked)
                 try
                 {
@@ -242,9 +339,118 @@ namespace Plot
             graphMax.Enabled = setGraphMaxEnable.Checked;
         }
 
-        private void graph_scale_ValueChanged(object sender, EventArgs e)
+        private void setGraphMinEnable_CheckedChanged(object sender, EventArgs e)
         {
-            chart1.ChartAreas[0].AxisY.Interval = (int)graphSpeed.Value;
+            if (setGraphMinEnable.Checked)
+                try
+                {
+                    graphMin.Value = (int)chart1.ChartAreas[0].AxisY.Minimum;
+                    chart1.ChartAreas[0].AxisY.Minimum = (int)graphMin.Value;
+                }
+                catch { throw; }
+            else
+                chart1.ChartAreas[0].AxisY.Minimum = Double.NaN;
+
+            graphMin.Enabled = setGraphMinEnable.Checked;
         }
+
+        private void graphMax_ValueChanged(object sender, EventArgs e)
+        {
+            if (graphMax.Value > graphMin.Value)
+                chart1.ChartAreas[0].AxisY.Maximum = (int)graphMax.Value;
+            else
+                alert("Zła maksymalna wartość");
+        }
+
+        private void alert(string text)
+        {
+            message.Icon = Icon;
+            message.Visible = true;
+            message.ShowBalloonTip(5000, "Praca Inżynierska", text, ToolTipIcon.Info);
+        }
+
+        private void information(string text)
+        {        
+            message.Icon = Icon;
+            message.Visible = true;
+            message.ShowBalloonTip(5000, "Serial Lab", text, ToolTipIcon.Error);
+        }
+
+        private void graphMin_ValueChanged(object sender, EventArgs e)
+        {
+            if (graphMax.Value > graphMin.Value)
+                chart1.ChartAreas[0].AxisY.Minimum = (int)graphMin.Value;
+            else
+                alert("Zła minimalna wartość");
+        }
+
+        private void dopisaćToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            nadpiszToolStripMenuItem.Checked = false;
+        }
+
+        private void nadpiszToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dopisaćToolStripMenuItem.Checked = false;
+        }
+
+        private void wyczyśćToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (dopisaćToolStripMenuItem.Checked == true || nadpiszToolStripMenuItem.Checked == true) { 
+            dopisaćToolStripMenuItem.Checked = false;
+            nadpiszToolStripMenuItem.Checked = false;
+            }
+        }
+
+        private void zakończToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void sendData_Click(object sender, EventArgs e)
+        {
+            terminalTextBox.Clear();
+
+            }
+
+        //get number of lines
+        private int file_size(string path)
+        {
+            var file = new StreamReader(path).ReadToEnd();
+            string[] lines = file.Split(new char[] { '\n' });
+            int count = lines.Count();
+            return count;
+        }
+
+        private void saveFileDialog2_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void screenChart_Click(object sender, EventArgs e)
+        {
+            chart1.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
+        }
+
+        /*
+        // save graph as image
+        private void saveAsImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                graph.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
+        }
+        //clear graph
+        private void clear_graph_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+                graph.Series[i].Points.Clear();
+        }
+        */
+
     }
 }

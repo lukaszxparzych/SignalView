@@ -82,10 +82,17 @@
             this.setGraphMinEnable = new System.Windows.Forms.CheckBox();
             this.graphMin = new System.Windows.Forms.NumericUpDown();
             this.setGraphMaxEnable = new System.Windows.Forms.CheckBox();
-            this.graph_scale = new System.Windows.Forms.NumericUpDown();
+            this.graphScale = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.graphSpeed = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
+            this.Wykres = new System.Windows.Forms.Label();
+            this.message = new System.Windows.Forms.NotifyIcon(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.wyczyśćToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.screenChart = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.configurationBox.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -95,7 +102,7 @@
             this.plotterOption.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.graphMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.graphMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.graph_scale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graphScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.graphSpeed)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,30 +133,39 @@
             // 
             // zapiszToolStripMenuItem
             // 
+            this.zapiszToolStripMenuItem.DoubleClickEnabled = true;
             this.zapiszToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dopisaćToolStripMenuItem,
-            this.nadpiszToolStripMenuItem});
+            this.nadpiszToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.wyczyśćToolStripMenuItem});
             this.zapiszToolStripMenuItem.Name = "zapiszToolStripMenuItem";
-            this.zapiszToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.zapiszToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zapiszToolStripMenuItem.Text = "Zapisz";
             // 
             // dopisaćToolStripMenuItem
             // 
+            this.dopisaćToolStripMenuItem.CheckOnClick = true;
             this.dopisaćToolStripMenuItem.Name = "dopisaćToolStripMenuItem";
-            this.dopisaćToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.dopisaćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dopisaćToolStripMenuItem.Text = "Dopisać";
+            this.dopisaćToolStripMenuItem.Click += new System.EventHandler(this.dopisaćToolStripMenuItem_Click);
             // 
             // nadpiszToolStripMenuItem
             // 
+            this.nadpiszToolStripMenuItem.CheckOnClick = true;
             this.nadpiszToolStripMenuItem.Name = "nadpiszToolStripMenuItem";
-            this.nadpiszToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.nadpiszToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nadpiszToolStripMenuItem.Text = "Nadpisz";
+            this.nadpiszToolStripMenuItem.Click += new System.EventHandler(this.nadpiszToolStripMenuItem_Click);
             // 
             // zakończToolStripMenuItem
             // 
+            this.zakończToolStripMenuItem.DoubleClickEnabled = true;
             this.zakończToolStripMenuItem.Name = "zakończToolStripMenuItem";
-            this.zakończToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.zakończToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zakończToolStripMenuItem.Text = "Zakończ";
+            this.zakończToolStripMenuItem.Click += new System.EventHandler(this.zakończToolStripMenuItem_Click);
             // 
             // opcjeToolStripMenuItem
             // 
@@ -165,7 +181,7 @@
             this.stringToolStripMenuItem,
             this.hexToolStripMenuItem});
             this.odczytywanieToolStripMenuItem.Name = "odczytywanieToolStripMenuItem";
-            this.odczytywanieToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.odczytywanieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.odczytywanieToolStripMenuItem.Text = "Odczytywanie";
             // 
             // stringToolStripMenuItem
@@ -410,6 +426,7 @@
             this.sendData.TabIndex = 15;
             this.sendData.Text = "Wyślij";
             this.sendData.UseVisualStyleBackColor = true;
+            this.sendData.Click += new System.EventHandler(this.sendData_Click);
             // 
             // tx_textarea
             // 
@@ -466,30 +483,36 @@
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.chart1.Enabled = false;
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(388, 27);
             this.chart1.Name = "chart1";
+            series1.BorderWidth = 2;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series1.Legend = "Legend1";
-            series1.Name = "Series1";
+            series1.Name = "1 czujnik";
+            series2.BorderWidth = 2;
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series2.Legend = "Legend1";
-            series2.Name = "Series2";
+            series2.Name = "2 czujnik";
+            series3.BorderWidth = 2;
             series3.ChartArea = "ChartArea1";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series3.Legend = "Legend1";
-            series3.Name = "Series3";
+            series3.Name = "3 czujnik";
+            series4.BorderWidth = 2;
             series4.ChartArea = "ChartArea1";
             series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series4.Legend = "Legend1";
-            series4.Name = "Series4";
+            series4.Name = "4 czujnik";
+            series5.BorderWidth = 2;
             series5.ChartArea = "ChartArea1";
             series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series5.Legend = "Legend1";
-            series5.Name = "Series5";
+            series5.Name = "5 czujnik";
             this.chart1.Series.Add(series1);
             this.chart1.Series.Add(series2);
             this.chart1.Series.Add(series3);
@@ -498,6 +521,7 @@
             this.chart1.Size = new System.Drawing.Size(819, 620);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
+            this.chart1.Click += new System.EventHandler(this.chart1_Click);
             // 
             // wykresButtonOpen
             // 
@@ -527,11 +551,12 @@
             // 
             // plotterOption
             // 
+            this.plotterOption.Controls.Add(this.screenChart);
             this.plotterOption.Controls.Add(this.graphMax);
             this.plotterOption.Controls.Add(this.setGraphMinEnable);
             this.plotterOption.Controls.Add(this.graphMin);
             this.plotterOption.Controls.Add(this.setGraphMaxEnable);
-            this.plotterOption.Controls.Add(this.graph_scale);
+            this.plotterOption.Controls.Add(this.graphScale);
             this.plotterOption.Controls.Add(this.label3);
             this.plotterOption.Controls.Add(this.graphSpeed);
             this.plotterOption.Controls.Add(this.label7);
@@ -554,11 +579,6 @@
             0,
             0,
             0});
-            this.graphMax.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
             this.graphMax.Name = "graphMax";
             this.graphMax.Size = new System.Drawing.Size(59, 20);
             this.graphMax.TabIndex = 28;
@@ -567,17 +587,20 @@
             1,
             0,
             0,
-            -2147483648});
+            0});
+            this.graphMax.ValueChanged += new System.EventHandler(this.graphMax_ValueChanged);
             // 
             // setGraphMinEnable
             // 
             this.setGraphMinEnable.AutoSize = true;
+            this.setGraphMinEnable.Enabled = false;
             this.setGraphMinEnable.Location = new System.Drawing.Point(202, 31);
             this.setGraphMinEnable.Name = "setGraphMinEnable";
             this.setGraphMinEnable.Size = new System.Drawing.Size(103, 17);
             this.setGraphMinEnable.TabIndex = 27;
             this.setGraphMinEnable.Text = "Ustaw Minimum:";
             this.setGraphMinEnable.UseVisualStyleBackColor = true;
+            this.setGraphMinEnable.CheckedChanged += new System.EventHandler(this.setGraphMinEnable_CheckedChanged);
             // 
             // graphMin
             // 
@@ -592,61 +615,65 @@
             0,
             0});
             this.graphMin.Minimum = new decimal(new int[] {
-            100000,
+            1,
             0,
             0,
-            -2147483648});
+            0});
             this.graphMin.Name = "graphMin";
             this.graphMin.Size = new System.Drawing.Size(59, 20);
             this.graphMin.TabIndex = 26;
             this.graphMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.graphMin.Value = new decimal(new int[] {
-            1,
+            300,
             0,
             0,
-            -2147483648});
+            0});
+            this.graphMin.ValueChanged += new System.EventHandler(this.graphMin_ValueChanged);
             // 
             // setGraphMaxEnable
             // 
             this.setGraphMaxEnable.AutoSize = true;
+            this.setGraphMaxEnable.Enabled = false;
             this.setGraphMaxEnable.Location = new System.Drawing.Point(19, 31);
             this.setGraphMaxEnable.Name = "setGraphMaxEnable";
             this.setGraphMaxEnable.Size = new System.Drawing.Size(112, 17);
             this.setGraphMaxEnable.TabIndex = 25;
             this.setGraphMaxEnable.Text = "Ustaw Maksimum:";
             this.setGraphMaxEnable.UseVisualStyleBackColor = true;
+            this.setGraphMaxEnable.CheckedChanged += new System.EventHandler(this.setGraphMaxEnable_CheckedChanged);
             // 
-            // graph_scale
+            // graphScale
             // 
-            this.graph_scale.AutoSize = true;
-            this.graph_scale.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.graph_scale.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.graph_scale.Increment = new decimal(new int[] {
+            this.graphScale.AutoSize = true;
+            this.graphScale.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.graphScale.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.graphScale.Increment = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.graph_scale.Location = new System.Drawing.Point(432, 30);
-            this.graph_scale.Maximum = new decimal(new int[] {
+            this.graphScale.Location = new System.Drawing.Point(426, 30);
+            this.graphScale.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.graph_scale.Minimum = new decimal(new int[] {
+            this.graphScale.Minimum = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.graph_scale.Name = "graph_scale";
-            this.graph_scale.Size = new System.Drawing.Size(53, 20);
-            this.graph_scale.TabIndex = 19;
-            this.graph_scale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.graph_scale.Value = new decimal(new int[] {
+            this.graphScale.Name = "graphScale";
+            this.graphScale.ReadOnly = true;
+            this.graphScale.Size = new System.Drawing.Size(53, 20);
+            this.graphScale.TabIndex = 19;
+            this.graphScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.graphScale.Value = new decimal(new int[] {
             500,
             0,
             0,
             0});
-            this.graph_scale.ValueChanged += new System.EventHandler(this.graph_scale_ValueChanged);
+            this.graphScale.ValueChanged += new System.EventHandler(this.graph_scale_ValueChanged);
             // 
             // label3
             // 
@@ -654,9 +681,9 @@
             this.label3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(376, 30);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(50, 16);
+            this.label3.Size = new System.Drawing.Size(44, 16);
             this.label3.TabIndex = 24;
-            this.label3.Text = "Punkty:";
+            this.label3.Text = "Skala:";
             // 
             // graphSpeed
             // 
@@ -664,7 +691,7 @@
             this.graphSpeed.AutoSize = true;
             this.graphSpeed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.graphSpeed.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.graphSpeed.Location = new System.Drawing.Point(562, 30);
+            this.graphSpeed.Location = new System.Drawing.Point(556, 30);
             this.graphSpeed.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -676,6 +703,7 @@
             0,
             0});
             this.graphSpeed.Name = "graphSpeed";
+            this.graphSpeed.ReadOnly = true;
             this.graphSpeed.Size = new System.Drawing.Size(53, 20);
             this.graphSpeed.TabIndex = 17;
             this.graphSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -690,17 +718,68 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(491, 30);
+            this.label7.Location = new System.Drawing.Point(485, 30);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 16);
             this.label7.TabIndex = 18;
             this.label7.Text = "Przedział:";
+            // 
+            // Wykres
+            // 
+            this.Wykres.AutoSize = true;
+            this.Wykres.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Wykres.Location = new System.Drawing.Point(706, 0);
+            this.Wykres.Name = "Wykres";
+            this.Wykres.Size = new System.Drawing.Size(91, 26);
+            this.Wykres.TabIndex = 27;
+            this.Wykres.Text = "Wykres";
+            this.Wykres.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // message
+            // 
+            this.message.Text = "notifyIcon1";
+            this.message.Visible = true;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "png";
+            this.saveFileDialog1.FileName = "figure";
+            this.saveFileDialog1.Filter = "PNG|.png| JPEG|.jpg";
+            this.saveFileDialog1.RestoreDirectory = true;
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // wyczyśćToolStripMenuItem
+            // 
+            this.wyczyśćToolStripMenuItem.Name = "wyczyśćToolStripMenuItem";
+            this.wyczyśćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wyczyśćToolStripMenuItem.Text = "Wyczyść";
+            this.wyczyśćToolStripMenuItem.Click += new System.EventHandler(this.wyczyśćToolStripMenuItem_Click);
+            // 
+            // screenChart
+            // 
+            this.screenChart.Enabled = false;
+            this.screenChart.Location = new System.Drawing.Point(713, 22);
+            this.screenChart.Name = "screenChart";
+            this.screenChart.Size = new System.Drawing.Size(100, 32);
+            this.screenChart.TabIndex = 29;
+            this.screenChart.Text = "Screen wykresu";
+            this.screenChart.UseVisualStyleBackColor = true;
+            this.screenChart.Click += new System.EventHandler(this.screenChart_Click);
             // 
             // SignalView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1219, 729);
+            this.Controls.Add(this.Wykres);
             this.Controls.Add(this.plotterOption);
             this.Controls.Add(this.wykresButtonClose);
             this.Controls.Add(this.chart1);
@@ -719,6 +798,7 @@
             this.Name = "SignalView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SignalView";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SignalView_FormClosing);
             this.Load += new System.EventHandler(this.SignalView_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -733,7 +813,7 @@
             this.plotterOption.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.graphMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.graphMin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.graph_scale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.graphScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.graphSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -786,10 +866,17 @@
         private System.Windows.Forms.CheckBox setGraphMinEnable;
         private System.Windows.Forms.NumericUpDown graphMin;
         private System.Windows.Forms.CheckBox setGraphMaxEnable;
-        private System.Windows.Forms.NumericUpDown graph_scale;
+        private System.Windows.Forms.NumericUpDown graphScale;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown graphSpeed;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label Wykres;
+        private System.Windows.Forms.NotifyIcon message;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem wyczyśćToolStripMenuItem;
+        private System.Windows.Forms.Button screenChart;
     }
 }
 
