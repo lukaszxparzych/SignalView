@@ -43,6 +43,8 @@
             this.zapiszToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dopisaćToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nadpiszToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.wyczyśćToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zakończToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.opcjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.odczytywanieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +80,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.wykresButtonClose = new System.Windows.Forms.Button();
             this.plotterOption = new System.Windows.Forms.GroupBox();
+            this.screenChart = new System.Windows.Forms.Button();
             this.graphMax = new System.Windows.Forms.NumericUpDown();
             this.setGraphMinEnable = new System.Windows.Forms.CheckBox();
             this.graphMin = new System.Windows.Forms.NumericUpDown();
@@ -90,9 +93,6 @@
             this.message = new System.Windows.Forms.NotifyIcon(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.wyczyśćToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.screenChart = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.configurationBox.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -159,6 +159,18 @@
             this.nadpiszToolStripMenuItem.Text = "Nadpisz";
             this.nadpiszToolStripMenuItem.Click += new System.EventHandler(this.nadpiszToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // wyczyśćToolStripMenuItem
+            // 
+            this.wyczyśćToolStripMenuItem.Name = "wyczyśćToolStripMenuItem";
+            this.wyczyśćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wyczyśćToolStripMenuItem.Text = "Wyczyść";
+            this.wyczyśćToolStripMenuItem.Click += new System.EventHandler(this.wyczyśćToolStripMenuItem_Click);
+            // 
             // zakończToolStripMenuItem
             // 
             this.zakończToolStripMenuItem.DoubleClickEnabled = true;
@@ -189,14 +201,16 @@
             this.stringToolStripMenuItem.Checked = true;
             this.stringToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.stringToolStripMenuItem.Name = "stringToolStripMenuItem";
-            this.stringToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.stringToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stringToolStripMenuItem.Text = "String";
+            this.stringToolStripMenuItem.Click += new System.EventHandler(this.stringToolStripMenuItem_Click);
             // 
             // hexToolStripMenuItem
             // 
             this.hexToolStripMenuItem.Name = "hexToolStripMenuItem";
-            this.hexToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.hexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.hexToolStripMenuItem.Text = "Hex";
+            this.hexToolStripMenuItem.Click += new System.EventHandler(this.hexToolStripMenuItem_Click);
             // 
             // oProgramieToolStripMenuItem
             // 
@@ -348,6 +362,7 @@
             this.nameportCombobox.Name = "nameportCombobox";
             this.nameportCombobox.Size = new System.Drawing.Size(121, 21);
             this.nameportCombobox.TabIndex = 6;
+            this.nameportCombobox.Click += new System.EventHandler(this.nameportCombobox_Click);
             // 
             // bitydanychLabel
             // 
@@ -567,6 +582,17 @@
             this.plotterOption.TabStop = false;
             this.plotterOption.Text = "Ustawienia wykresu";
             // 
+            // screenChart
+            // 
+            this.screenChart.Enabled = false;
+            this.screenChart.Location = new System.Drawing.Point(713, 22);
+            this.screenChart.Name = "screenChart";
+            this.screenChart.Size = new System.Drawing.Size(100, 32);
+            this.screenChart.TabIndex = 29;
+            this.screenChart.Text = "Screen wykresu";
+            this.screenChart.UseVisualStyleBackColor = true;
+            this.screenChart.Click += new System.EventHandler(this.screenChart_Click);
+            // 
             // graphMax
             // 
             this.graphMax.AutoSize = true;
@@ -750,29 +776,6 @@
             this.saveFileDialog1.FileName = "figure";
             this.saveFileDialog1.Filter = "PNG|.png| JPEG|.jpg";
             this.saveFileDialog1.RestoreDirectory = true;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // wyczyśćToolStripMenuItem
-            // 
-            this.wyczyśćToolStripMenuItem.Name = "wyczyśćToolStripMenuItem";
-            this.wyczyśćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.wyczyśćToolStripMenuItem.Text = "Wyczyść";
-            this.wyczyśćToolStripMenuItem.Click += new System.EventHandler(this.wyczyśćToolStripMenuItem_Click);
-            // 
-            // screenChart
-            // 
-            this.screenChart.Enabled = false;
-            this.screenChart.Location = new System.Drawing.Point(713, 22);
-            this.screenChart.Name = "screenChart";
-            this.screenChart.Size = new System.Drawing.Size(100, 32);
-            this.screenChart.TabIndex = 29;
-            this.screenChart.Text = "Screen wykresu";
-            this.screenChart.UseVisualStyleBackColor = true;
-            this.screenChart.Click += new System.EventHandler(this.screenChart_Click);
             // 
             // SignalView
             // 

@@ -22,15 +22,17 @@ namespace Plot
 {
     public partial class SignalView : Form
     {
+        String path;
         public string data { get; set; }
-
+        String[] ports;
         System.IO.StreamWriter out_file;
         System.IO.StreamReader in_file;
         public delegate void AddDataDelegate(String myString);
         public AddDataDelegate myDelegate;
-        int licznik = 0;
         int graph_scaler = 500;
         bool plotterBool = false;
+       
+
         public SignalView()
         {
             InitializeComponent();
@@ -40,7 +42,7 @@ namespace Plot
         public void configuration()
         {
             alert("Witam!");
-            String[] ports = SerialPort.GetPortNames();
+            ports = SerialPort.GetPortNames();
             mySerial.DataReceived += DataReceivedHandler;
             nameportCombobox.Items.AddRange(ports);
             backgroundWorker1.DoWork += new DoWorkEventHandler(update_receiveTextBox_event);
@@ -55,9 +57,20 @@ namespace Plot
             bitparzystosciCombobox.SelectedIndex = 0;
             flowcontrolCombobox.SelectedIndex = 0;
 
-            for (int i = 0; i < 5 && i < 5; i++)
+            for (int i = 0; i < 5; i++)
                 chart1.Series[i].Points.Add(0);
 
+        }
+
+        public void findPorts()
+        {
+            if(ports.Length != 0)
+            {
+                Array.Clear(ports, 0, ports.Length);
+                nameportCombobox.Items.Clear();
+            }
+            ports = SerialPort.GetPortNames();
+            nameportCombobox.Items.AddRange(ports);
         }
 
         private void plikToolStripMenuItem_Click(object sender, EventArgs e)
@@ -146,7 +159,20 @@ namespace Plot
                         mySerial.DataBits = (Int32.Parse(bitdanychCombobox.Text));
                         mySerial.Handshake = (Handshake)Enum.Parse(typeof(Handshake), flowcontrolCombobox.SelectedIndex.ToString(), true);
                         */
-                       
+
+
+                        if (dopisaćToolStripMenuItem.Checked || nadpiszToolStripMenuItem.Checked)
+                        {
+                            try
+                            {
+                                out_file = new System.IO.StreamWriter(path, dopisaćToolStripMenuItem.Checked);
+                            }
+                            catch
+                            {
+                                alert("Nie mogę zapisać do " + path + " plik może być otwarty przez inny program"); return;
+                            }
+                        }
+                     
 
                     }
                 }
@@ -178,12 +204,10 @@ namespace Plot
 
             string tx_data = "";
 
-            
                 if (mySerial.IsOpen)
                 {
                     try
                     {
-
                         mySerial.Write(tx_data.Replace("\\n", Environment.NewLine));
                         terminalTextBox.AppendText("[TX]> " + tx_data + "\n");
                     }
@@ -216,7 +240,7 @@ namespace Plot
 
 
 
-        public void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        public void DataReceivedHandler(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             /*
              SerialPort sp = (SerialPort)sender;
@@ -237,6 +261,13 @@ namespace Plot
 
                     if (nbytes == 0) return;
 
+                    if (dopisaćToolStripMenuItem.Checked || nadpiszToolStripMenuItem.Checked)
+                    {
+                        try
+                        { out_file.Write(data.Replace("\\n", Environment.NewLine)); }
+                        catch { alert("Nie mogę zapisać do " + path + " plik może być otwarty przez inny program"); return; }
+                    }
+
                     //if()
 
                     this.BeginInvoke((Action)(() =>
@@ -245,8 +276,8 @@ namespace Plot
 
                         if (!plotterBool && !backgroundWorker1.IsBusy)
                         {
-                            //if(opcjeToolStripMenuItem. == "HEX")
-                            //data = BitConverter.ToString(dataReceived);
+                            if(hexToolStripMenuItem.Checked)
+                            data = BitConverter.ToString(dataReceived);
 
                             backgroundWorker1.RunWorkerAsync();
                         }
@@ -317,6 +348,10 @@ namespace Plot
                 statusBox.Text = "Zamknięto port";
                 alert("Zamknięto port");
 
+                if (dopisaćToolStripMenuItem.Checked || nadpiszToolStripMenuItem.Checked) { 
+                    try { out_file.Dispose(); }
+                    catch {}
+                }
             }
         }
         //tworzenie obiektu wykres
@@ -472,7 +507,7 @@ namespace Plot
             {
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-
+                    path = openFileDialog1.FileName;
                 }
                 else
                 {
@@ -487,6 +522,7 @@ namespace Plot
             { 
                 dopisaćToolStripMenuItem.Checked = false;
                 nadpiszToolStripMenuItem.Checked = false;
+                path = "";
             }
         }
 
@@ -547,7 +583,22 @@ namespace Plot
                 chart1.SaveImage(saveFileDialog1.FileName, ChartImageFormat.Png);
         }
 
-       
+        private void nameportCombobox_Click(object sender, EventArgs e)
+        {
+            findPorts();
+        }
 
+        private void hexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            stringToolStripMenuItem.Checked = false;
+            hexToolStripMenuItem.Checked = true;
+        }
+
+        private void stringToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            hexToolStripMenuItem.Checked = false;
+            stringToolStripMenuItem.Checked = true;
+
+        }
     }
 }
