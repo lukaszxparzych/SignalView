@@ -140,14 +140,14 @@
             this.toolStripSeparator1,
             this.wyczyśćToolStripMenuItem});
             this.zapiszToolStripMenuItem.Name = "zapiszToolStripMenuItem";
-            this.zapiszToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zapiszToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.zapiszToolStripMenuItem.Text = "Zapisz";
             // 
             // dopisaćToolStripMenuItem
             // 
             this.dopisaćToolStripMenuItem.CheckOnClick = true;
             this.dopisaćToolStripMenuItem.Name = "dopisaćToolStripMenuItem";
-            this.dopisaćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dopisaćToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.dopisaćToolStripMenuItem.Text = "Dopisać";
             this.dopisaćToolStripMenuItem.Click += new System.EventHandler(this.dopisaćToolStripMenuItem_Click);
             // 
@@ -155,19 +155,19 @@
             // 
             this.nadpiszToolStripMenuItem.CheckOnClick = true;
             this.nadpiszToolStripMenuItem.Name = "nadpiszToolStripMenuItem";
-            this.nadpiszToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nadpiszToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.nadpiszToolStripMenuItem.Text = "Nadpisz";
             this.nadpiszToolStripMenuItem.Click += new System.EventHandler(this.nadpiszToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(116, 6);
             // 
             // wyczyśćToolStripMenuItem
             // 
             this.wyczyśćToolStripMenuItem.Name = "wyczyśćToolStripMenuItem";
-            this.wyczyśćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wyczyśćToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.wyczyśćToolStripMenuItem.Text = "Wyczyść";
             this.wyczyśćToolStripMenuItem.Click += new System.EventHandler(this.wyczyśćToolStripMenuItem_Click);
             // 
@@ -175,7 +175,7 @@
             // 
             this.zakończToolStripMenuItem.DoubleClickEnabled = true;
             this.zakończToolStripMenuItem.Name = "zakończToolStripMenuItem";
-            this.zakończToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zakończToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.zakończToolStripMenuItem.Text = "Zakończ";
             this.zakończToolStripMenuItem.Click += new System.EventHandler(this.zakończToolStripMenuItem_Click);
             // 
@@ -193,7 +193,7 @@
             this.stringToolStripMenuItem,
             this.hexToolStripMenuItem});
             this.odczytywanieToolStripMenuItem.Name = "odczytywanieToolStripMenuItem";
-            this.odczytywanieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.odczytywanieToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.odczytywanieToolStripMenuItem.Text = "Odczytywanie";
             // 
             // stringToolStripMenuItem
@@ -201,14 +201,14 @@
             this.stringToolStripMenuItem.Checked = true;
             this.stringToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.stringToolStripMenuItem.Name = "stringToolStripMenuItem";
-            this.stringToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stringToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.stringToolStripMenuItem.Text = "String";
             this.stringToolStripMenuItem.Click += new System.EventHandler(this.stringToolStripMenuItem_Click);
             // 
             // hexToolStripMenuItem
             // 
             this.hexToolStripMenuItem.Name = "hexToolStripMenuItem";
-            this.hexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hexToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.hexToolStripMenuItem.Text = "Hex";
             this.hexToolStripMenuItem.Click += new System.EventHandler(this.hexToolStripMenuItem_Click);
             // 

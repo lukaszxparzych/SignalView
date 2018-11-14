@@ -121,8 +121,6 @@ namespace Plot
                     }
                     else
                     {
-
-
                         mySerial.PortName = nameportCombobox.Text;
                         mySerial.BaudRate = Convert.ToInt32(predkoscCombobox.Text);                        
                         mySerial.Open();
@@ -152,16 +150,16 @@ namespace Plot
                         graphSpeed.ReadOnly = false;
                         screenChart.Enabled = true;
 
-                        /*
-                        mySerial.BaudRate = (Int32.Parse(predkoscCombobox.Text));
-                        mySerial.StopBits = (StopBits)Enum.Parse(typeof(StopBits), (bitstopuCombobox.SelectedIndex + 1).ToString(), true);
-                        mySerial.Parity = (Parity)Enum.Parse(typeof(Parity), bitparzystosciCombobox.SelectedIndex.ToString(), true);
-                        mySerial.DataBits = (Int32.Parse(bitdanychCombobox.Text));
-                        mySerial.Handshake = (Handshake)Enum.Parse(typeof(Handshake), flowcontrolCombobox.SelectedIndex.ToString(), true);
-                        */
+                        
+                        mySerial.BaudRate = (Int32.Parse(predkoscCombobox.Text.ToString()));
+                        mySerial.StopBits = (StopBits)Enum.Parse(typeof(StopBits), (bitstopuCombobox.Text), true);
+                        mySerial.Parity = (Parity)Enum.Parse(typeof(Parity), bitparzystosciCombobox.Text.ToString(), true);
+                        //mySerial.DataBits = (Int32.Parse(bitdanychCombobox.Text.ToString()));
+                        //mySerial.Handshake = (Handshake)Enum.Parse(typeof(Handshake), flowcontrolCombobox.Text.ToString(), true);
+                        
 
 
-                        if (dopisaćToolStripMenuItem.Checked || nadpiszToolStripMenuItem.Checked)
+                        if (dopisaćToolStripMenuItem.Checked)
                         {
                             try
                             {
@@ -169,7 +167,7 @@ namespace Plot
                             }
                             catch
                             {
-                                alert("Nie mogę zapisać do " + path + " plik może być otwarty przez inny program"); return;
+                                alert("Nie mogę zapisać do " + path + " plik może być otwarty przez inny program1"); return;
                             }
                         }
                      
@@ -209,7 +207,7 @@ namespace Plot
                     try
                     {
                         mySerial.Write(tx_data.Replace("\\n", Environment.NewLine));
-                        terminalTextBox.AppendText("[TX]> " + tx_data + "\n");
+                        terminalTextBox.AppendText(tx_data + "\n");
                     }
                     catch
                     {
@@ -234,7 +232,7 @@ namespace Plot
             {
                 if (receiveTextBox.Lines.Count() > 5000)
                     receiveTextBox.ResetText();
-                receiveTextBox.AppendText("[RX]> " + data);
+                receiveTextBox.AppendText(data);
             }));
         }
 
@@ -242,15 +240,6 @@ namespace Plot
 
         public void DataReceivedHandler(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
-            /*
-             SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadLine();
-            //string indata = sp.ReadExisting();
-            receiveData += indata + Environment.NewLine;
-
-            receiveTextBox.BeginInvoke(this.myDelegate, new Object[] { indata });
-
-            */
             if (mySerial.IsOpen)
             {
                 try
@@ -261,19 +250,19 @@ namespace Plot
 
                     if (nbytes == 0) return;
 
-                    if (dopisaćToolStripMenuItem.Checked || nadpiszToolStripMenuItem.Checked)
+                    if (dopisaćToolStripMenuItem.Checked)
                     {
                         try
                         { out_file.Write(data.Replace("\\n", Environment.NewLine)); }
                         catch { alert("Nie mogę zapisać do " + path + " plik może być otwarty przez inny program"); return; }
                     }
 
-                    //if()
 
                     this.BeginInvoke((Action)(() =>
                     {
                         data = System.Text.Encoding.Default.GetString(dataReceived);
 
+                        
                         if (!plotterBool && !backgroundWorker1.IsBusy)
                         {
                             if(hexToolStripMenuItem.Checked)
@@ -405,8 +394,6 @@ namespace Plot
         {
 
             chart1.ChartAreas[0].AxisY.Interval = (int)graphSpeed.Value;
-
-
         }
 
         private void graph_scale_ValueChanged(object sender, EventArgs e)
@@ -490,7 +477,7 @@ namespace Plot
             {
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-
+                    path = openFileDialog1.FileName;
                 }
                 else
                 {
